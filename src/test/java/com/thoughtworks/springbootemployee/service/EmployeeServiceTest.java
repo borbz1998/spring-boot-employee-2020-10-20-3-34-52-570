@@ -4,7 +4,6 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockingDetails;
 import org.mockito.Mockito;
 
 import java.util.List;
@@ -24,7 +23,7 @@ class EmployeeServiceTest {
         EmployeeService employeeService = new EmployeeService(employeeRepository);
 
         // when
-        List<Employee> actual = employeeService.getAll();
+        List<Employee> actual = employeeService.getAllEmployees();
         //then
         assertEquals(2, actual.size());
     }
@@ -38,7 +37,7 @@ class EmployeeServiceTest {
         EmployeeService employeeService = new EmployeeService(employeeRepository);
 
         // when
-        Employee actualResult = employeeService.create(employeeRequest);
+        Employee actualResult = employeeService.createEmployee(employeeRequest);
 
         //then
         Assertions.assertEquals(1, actualResult.getId());
@@ -55,7 +54,7 @@ class EmployeeServiceTest {
                 .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
         // when
-        Employee actualResult = employeeService.get(1);
+        Employee actualResult = employeeService.getEmployee(1);
 
         //then
         Assertions.assertEquals(1, actualResult.getId());
@@ -72,10 +71,28 @@ class EmployeeServiceTest {
                 .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
         // when
-        employeeService.delete(1);
+        employeeService.deleteEmployee(1);
 
         //then
         Mockito.verify(employeeRepository, Mockito.times(1))
                 .remove(Mockito.any(Employee.class));
+    }
+
+    @Test
+    void should_return_updated_employee_given_employee_id() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+
+        when(employeeRepository.findById(1)).thenReturn(Optional
+                .of(new Employee(1, "Charlie", 18, 150, "Male")));
+
+        // when
+        employeeService.updateEmployee(1,
+                (new Employee(2, "Janelle", 18, 150, "female")));
+
+        //then
+        when(employeeRepository.findById(2)).thenReturn(Optional
+                .of(new Employee(2, "Charlie", 18, 150, "female")));
     }
 }
