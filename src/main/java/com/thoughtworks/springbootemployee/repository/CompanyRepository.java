@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class CompanyRepository {
@@ -29,5 +30,13 @@ public class CompanyRepository {
 
     public void remove(Company company) {
         companyList.remove(company);
+    }
+
+    public List<Company> getByPage(Integer page, Integer pageSize) {
+        return companyList.stream()
+                .skip(pageSize * page)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+
     }
 }

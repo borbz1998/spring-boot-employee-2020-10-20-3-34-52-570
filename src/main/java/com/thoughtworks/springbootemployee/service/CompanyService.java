@@ -49,4 +49,8 @@ public class CompanyService {
         return updateCompany;
     }
 
+    public List<Company> getByPage(Integer page,Integer pageSize) {
+        return companyRepository.getByPage(page,pageSize);
+    }
+
 }

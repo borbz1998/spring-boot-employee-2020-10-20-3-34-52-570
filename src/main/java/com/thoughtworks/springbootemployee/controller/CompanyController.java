@@ -57,10 +57,7 @@ public class CompanyController {
     public List<Company> getByPage(
             @RequestParam("page") Integer page,
             @RequestParam("pageSize") Integer pageSize) {
-        return companyService.getAllCompany().stream()
-                .skip(pageSize * page)
-                .limit(pageSize)
-                .collect(Collectors.toList());
+        return companyService.getByPage(page,pageSize);
     }
 
     @GetMapping({"/{companyID}/employee"})

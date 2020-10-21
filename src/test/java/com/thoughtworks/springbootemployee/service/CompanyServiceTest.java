@@ -85,4 +85,23 @@ class CompanyServiceTest {
         //then
         Mockito.verify(employeeRepository, Mockito.times(2)).remove(Mockito.any(Employee.class));
     }
+
+    @Test
+    void should_return_2_company_when_getByPage_given_company_request() {
+        //GIVEN
+        List<Employee> employeeList = asList(new Employee(), new Employee());
+        List<Employee> employeeList2 = asList(new Employee(), new Employee());
+        List<Company> companies =
+                asList(new Company(1, "OOCL", employeeList.size(), employeeList),
+        new Company(1, "OOL", employeeList2.size(), employeeList2));
+
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        when(companyRepository.getByPage(1,2)).thenReturn(companies);
+        CompanyService companyService = new CompanyService(companyRepository,employeeRepository);
+        //WHEN
+        List<Company> companyActual = companyService.getByPage(1,2);
+        //THEN
+        Assertions.assertEquals(2, companyActual.size());
+    }
 }
