@@ -6,11 +6,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class EmployeeServiceTest {
@@ -98,11 +101,11 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_gender_when_search_given_employee_request() {
+    void should_return_gender_when_search_given_employee_request(){
         // GIVEN
-        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "male");
-        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "male");
-        Employee employeeRequest3 = new Employee(2, "Charlie", 10, 150, "female");
+        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "male" );
+        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "male" );
+        Employee employeeRequest3 = new Employee(2, "Charlie", 10, 150, "female" );
 
         EmployeeRepository employeeRepository = new EmployeeRepository();
         EmployeeService employeeService = new EmployeeService(employeeRepository);
@@ -116,17 +119,20 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_2_company_when_getByPage_given_employee_request() {
-        // GIVEN
-        List<Employee> employeeList = asList(new Employee(), new Employee());
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+    void should_return_gender_when_search_given_3_employee_request(){
+        //GIVEN
+        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "male" );
+        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "male" );
+        Employee employeeRequest3 = new Employee(2, "Charlie", 10, 150, "female" );
 
-        when(employeeRepository.getByPage(1, 2)).thenReturn(employeeList);
+        EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
+        when(repository.findAll()).thenReturn(asList(employeeRequest,employeeRequest2,employeeRequest3));
+        EmployeeService employeeService = new EmployeeService(repository);
 
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
-        // WHEN
-        List<Employee> employeeActual = employeeService.getByPage(1, 2);
-        // THEN
-        Assertions.assertEquals(2, employeeActual.size());
+        List<Employee> employeeList= asList(employeeRequest,employeeRequest2);
+        when(repository.getByGender("male")).thenReturn(employeeList);
+        List<Employee> actual = employeeService.getByGender("male");
+        Assertions.assertEquals(2, actual.size());
     }
+
 }
