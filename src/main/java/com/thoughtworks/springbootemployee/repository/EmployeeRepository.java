@@ -12,10 +12,6 @@ import java.util.stream.Collectors;
 public class EmployeeRepository {
     private List<Employee> employees = new ArrayList<>();
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
     }
