@@ -69,7 +69,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_delete_company_given_company_id() {
+    void should_delete_employee_on_list_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
@@ -80,9 +80,9 @@ class CompanyServiceTest {
                 .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
 
         // when
-        companyService.deleteCompany(1);
+        companyService.deleteCompanyEmployee(1);
 
         //then
-        Mockito.verify(companyRepository, Mockito.times(1)).remove(Mockito.any(Company.class));
+        Mockito.verify(employeeRepository, Mockito.times(2)).remove(Mockito.any(Employee.class));
     }
 }
