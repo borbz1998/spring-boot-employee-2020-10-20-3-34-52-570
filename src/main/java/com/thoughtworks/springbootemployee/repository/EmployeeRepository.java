@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class EmployeeRepository {
@@ -37,4 +38,15 @@ public class EmployeeRepository {
                 .findFirst();
     }
 
+    public List<Employee> getByGender(String gender) {
+        return employees.stream().filter(employee -> employee.getGender()
+                .equalsIgnoreCase(gender)).collect(Collectors.toList());
+    }
+
+    public List<Employee> getByPage(Integer page, Integer pageSize) {
+        return employees.stream()
+                .skip(pageSize * page)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+    }
 }
