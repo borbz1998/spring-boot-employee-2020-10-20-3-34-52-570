@@ -21,12 +21,13 @@ class CompanyServiceTest {
     void should_return_company_list_when_get_all_given_companies() {
         //given
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         List<Company> expectedResult = asList(new Company(), new Company());
         when(companyRepository.findAll()).thenReturn(expectedResult);
-        CompanyService employeeService = new CompanyService(companyRepository);
+        CompanyService employeeService = new CompanyService(companyRepository,employeeRepository);
 
         // when
-        List<Company> actual = employeeService.getAll();
+        List<Company> actual = employeeService.getAllCompany();
         //then
         assertEquals(2, actual.size());
     }
@@ -36,12 +37,13 @@ class CompanyServiceTest {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         Company companyRequest = new Company(1, "OOCL", employeeList.size(), employeeList);
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         when(companyRepository.save(companyRequest)).thenReturn(companyRequest);
-        CompanyService companyService = new CompanyService(companyRepository);
+        CompanyService companyService = new CompanyService(companyRepository,employeeRepository);
 
         // when
-        Company actualResult = companyService.create(companyRequest);
+        Company actualResult = companyService.createCompany(companyRequest);
 
         //then
         Assertions.assertEquals(1, actualResult.getCompanyId());
@@ -51,13 +53,14 @@ class CompanyServiceTest {
     void should_get_company_given_company_id() {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
-        CompanyService companyService = new CompanyService(companyRepository);
+        CompanyService companyService = new CompanyService(companyRepository,employeeRepository);
 
         when(companyRepository.findById(1)).thenReturn(Optional.of(new Company(1, "OOCL", employeeList.size(), employeeList)));
 
         // when
-        Company actualResult = companyService.get(1);
+        Company actualResult = companyService.getCompany(1);
 
         //then
         Assertions.assertEquals(1, actualResult.getCompanyId());
@@ -68,13 +71,15 @@ class CompanyServiceTest {
     void should_delete_company_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
-        CompanyService companyService = new CompanyService(companyRepository);
+        CompanyService companyService = new CompanyService(companyRepository,employeeRepository);
 
-        when(companyRepository.findById(1)).thenReturn(Optional.of(new Company(1, "OOCL", employeeList.size(), employeeList)));
+        when(companyRepository.findById(1)).thenReturn(Optional
+                .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
 
         // when
-        companyService.delete(1);
+        companyService.deleteCompany(1);
 
         //then
         Mockito.verify(companyRepository, Mockito.times(1)).remove(Mockito.any(Company.class));
