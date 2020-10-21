@@ -104,4 +104,24 @@ class CompanyServiceTest {
         //THEN
         Assertions.assertEquals(2, companyActual.size());
     }
+
+    @Test
+    void should_return_employee_on_list_given_company_id() {
+        // given
+        List<Employee> employeeList = asList(new Employee(), new Employee());
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository, employeeRepository);
+
+        when(companyRepository.findById(1)).thenReturn(Optional
+                .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
+
+        // when
+        List<Employee> finalEmployee = companyService.getCompanyEmployee(1);
+
+        //then
+        Assertions.assertEquals(2, finalEmployee.size());
+
+
+    }
 }
