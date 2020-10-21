@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class EmployeeServiceTest {
@@ -96,4 +97,22 @@ class EmployeeServiceTest {
         when(employeeRepository.findById(2)).thenReturn(Optional
                 .of(new Employee(2, "Charlie", 18, 150, "female")));
     }
+
+    @Test
+    void should_return_gender_when_search_given_employee_request(){
+        // GIVEN
+        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "male" );
+        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "male" );
+        Employee employeeRequest3 = new Employee(2, "Charlie", 10, 150, "female" );
+
+        EmployeeRepository employeeRepository = new EmployeeRepository();
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        employeeService.createEmployee(employeeRequest);
+        employeeService.createEmployee(employeeRequest2);
+        employeeService.createEmployee(employeeRequest3);
+        //when
+        List<Employee> employeeList = employeeService.getByGender("Male");
+        // then
+        Assertions.assertEquals(2, employeeList.size()); }
+
 }
