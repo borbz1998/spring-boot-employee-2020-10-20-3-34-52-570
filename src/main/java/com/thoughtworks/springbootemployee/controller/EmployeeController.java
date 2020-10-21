@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Employee;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -27,5 +28,12 @@ public class EmployeeController {
     public List<Employee> getByGender(@RequestParam("gender") String gender) {
         return employees.stream().filter(employee -> employee.getGender()
                 .equalsIgnoreCase(gender)).collect(Collectors.toList());
+    }
+
+    @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public Employee createEmployee(@RequestBody Employee newEmployee){
+        employees.add(newEmployee);
+        return newEmployee;
     }
 }
