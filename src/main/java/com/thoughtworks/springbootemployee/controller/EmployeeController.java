@@ -19,7 +19,7 @@ public class EmployeeController {
     }
 
     @GetMapping({"/{employeeID}"})
-    public Employee get(@PathVariable Integer employeeID) {
+    public Employee getByID(@PathVariable Integer employeeID) {
         return employees.stream().filter(employee -> employee.getId()
                 .equals(employeeID)).findFirst().orElse(null);
     }
@@ -30,9 +30,16 @@ public class EmployeeController {
                 .equalsIgnoreCase(gender)).collect(Collectors.toList());
     }
 
+    @GetMapping(params = {"pageNo", "pageSize"})
+    public List<Employee> getByPage(
+            @RequestParam("pageNo") Integer pageNo,
+            @RequestParam("pageSize") Integer pageSize) {
+        return employees.stream().skip(pageNo).limit(pageSize).collect(Collectors.toList());
+    }
+
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Employee createEmployee(@RequestBody Employee newEmployee){
+    public Employee createEmployee(@RequestBody Employee newEmployee) {
         employees.add(newEmployee);
         return newEmployee;
     }
