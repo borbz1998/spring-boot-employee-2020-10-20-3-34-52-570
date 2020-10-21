@@ -15,10 +15,10 @@ class EmployeeServiceTest {
     @Test
     void should_return_list_employee_when_get_all_given_employees() {
         //given
-        EmployeeService employeeService = new EmployeeService();
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         List<Employee> expectedResult = asList(new Employee(), new Employee());
         when(employeeRepository.findAll()).thenReturn(expectedResult);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
 
         // when
         List<Employee> actual = employeeService.getAll();
