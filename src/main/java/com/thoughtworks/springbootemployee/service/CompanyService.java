@@ -33,7 +33,7 @@ public class CompanyService {
     public void deleteCompanyEmployee(Integer companyId) {
         companyRepository.findById(companyId)
                 .ifPresent(company -> company.getEmployeeList()
-                .forEach(employee -> employeeRepository.remove(employee)));
+                        .forEach(employee -> employeeRepository.remove(employee)));
     }
 
     public List<Employee> getCompanyEmployee(Integer companyID) {
@@ -49,8 +49,8 @@ public class CompanyService {
         return updateCompany;
     }
 
-    public List<Company> getByPage(Integer page,Integer pageSize) {
-        return companyRepository.getByPage(page,pageSize);
+    public List<Company> getByPage(Integer page, Integer pageSize) {
+        return companyRepository.getByPage(page, pageSize);
     }
 
 }
