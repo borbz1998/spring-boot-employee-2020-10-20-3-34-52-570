@@ -15,20 +15,31 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Employee> getAll() {
+    public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
 
-    public Employee create(Employee newEmployee) {
+    public Employee createEmployee(Employee newEmployee) {
         return employeeRepository.save(newEmployee);
     }
 
-    public Employee get(Integer employeeId) {
-        return employeeRepository.findById(employeeId).orElse(null);
+    public Employee getEmployee(Integer employeeId) {
+        return employeeRepository.findById(employeeId)
+                .orElse(null);
     }
 
-    public void delete(Integer employeeId) {
+    public void deleteEmployee(Integer employeeId) {
         Optional<Employee> employee = employeeRepository.findById(employeeId);
         employee.ifPresent(employeeRepository::remove);
+    }
+    public Employee updateEmployee(Integer employeeId, Employee newEmployee) {
+        employeeRepository.findById(employeeId)
+                .ifPresent(employee -> {
+                    employeeRepository.remove(employee);
+                    employeeRepository.save(newEmployee);
+                });
+        Optional<Employee> employee = employeeRepository.findById(employeeId);
+        employee.ifPresent(employeeRepository::remove);
+        return newEmployee;
     }
 }

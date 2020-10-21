@@ -17,18 +17,18 @@ public class EmployeeController {
 
     @GetMapping
     public List<Employee> getAll() {
-        return employeeService.getAll();
+        return employeeService.getAllEmployees();
     }
 
     @GetMapping({"/{employeeID}"})
     public Employee getByID(@PathVariable Integer employeeID) {
-        return employeeService.getAll().stream().filter(employee -> employee.getId()
+        return employeeService.getAllEmployees().stream().filter(employee -> employee.getId()
                 .equals(employeeID)).findFirst().orElse(null);
     }
 
     @GetMapping(params = "gender")
     public List<Employee> getByGender(@RequestParam("gender") String gender) {
-        return employeeService.getAll().stream().filter(employee -> employee.getGender()
+        return employeeService.getAllEmployees().stream().filter(employee -> employee.getGender()
                 .equalsIgnoreCase(gender)).collect(Collectors.toList());
     }
 
@@ -36,7 +36,7 @@ public class EmployeeController {
     public List<Employee> getByPage(
             @RequestParam("page") Integer page,
             @RequestParam("pageSize") Integer pageSize) {
-        return employeeService.getAll().stream()
+        return employeeService.getAllEmployees().stream()
                 .skip(pageSize * page)
                 .limit(pageSize)
                 .collect(Collectors.toList());
@@ -45,24 +45,17 @@ public class EmployeeController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public Employee createEmployee(@RequestBody Employee newEmployee) {
-        return employeeService.create(newEmployee);
+        return employeeService.createEmployee(newEmployee);
     }
 
     @DeleteMapping({"/{employeeID}"})
-    public void delete(@PathVariable Integer employeeID) {
-        employeeService.getAll().stream().filter(employee -> employee.getId()
-                .equals(employeeID)).findFirst().ifPresent(employeeService.getAll()::remove);
+    public void deleteEmployee(@PathVariable Integer employeeID) {
+        employeeService.getAllEmployees().stream().filter(employee -> employee.getId()
+                .equals(employeeID)).findFirst().ifPresent(employeeService.getAllEmployees()::remove);
     }
 
     @PutMapping(path = "/{employeeID}")
-    public Employee updateEmployee(@PathVariable Integer employeeID, @RequestBody Employee updateEmployee) {
-        employeeService.getAll().stream()
-                .filter(employee -> employeeID.equals(employee.getId()))
-                .findFirst()
-                .ifPresent(employee -> {
-                    employeeService.getAll().remove(employee);
-                    employeeService.getAll().add(updateEmployee);
-                });
-        return updateEmployee;
+    public Employee updateEmployee(@PathVariable Integer employeeID, @RequestBody Employee newEmployee) {
+        return employeeService.updateEmployee(employeeID,newEmployee);
     }
 }
