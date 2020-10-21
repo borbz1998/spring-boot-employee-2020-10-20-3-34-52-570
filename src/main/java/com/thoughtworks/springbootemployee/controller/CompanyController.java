@@ -42,13 +42,7 @@ public class CompanyController {
 
     @PutMapping({"/{companyID}"})
     public Company updateCompany(@PathVariable Integer companyID, @RequestBody Company updateCompany) {
-        companyService.getAllCompany().stream()
-                .filter(company -> companyID.equals(company.getCompanyId()))
-                .findFirst()
-                .ifPresent(company -> {
-                    companyService.getAllCompany().remove(company);
-                    companyService.getAllCompany().add(updateCompany);
-                });
+        companyService.updateCompany(companyID,updateCompany);
         return updateCompany;
     }
 

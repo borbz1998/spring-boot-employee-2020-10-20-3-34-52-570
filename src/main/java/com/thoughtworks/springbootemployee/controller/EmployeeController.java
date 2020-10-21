@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employee")
@@ -28,18 +27,14 @@ public class EmployeeController {
 
     @GetMapping(params = "gender")
     public List<Employee> getByGender(@RequestParam("gender") String gender) {
-        return employeeService.getAllEmployees().stream().filter(employee -> employee.getGender()
-                .equalsIgnoreCase(gender)).collect(Collectors.toList());
+        return employeeService.getByGender(gender);
     }
 
     @GetMapping(params = {"page", "pageSize"})
     public List<Employee> getByPage(
             @RequestParam("page") Integer page,
             @RequestParam("pageSize") Integer pageSize) {
-        return employeeService.getAllEmployees().stream()
-                .skip(pageSize * page)
-                .limit(pageSize)
-                .collect(Collectors.toList());
+        return employeeService.getByPage(page, pageSize);
     }
 
     @PostMapping
@@ -56,6 +51,6 @@ public class EmployeeController {
 
     @PutMapping(path = "/{employeeID}")
     public Employee updateEmployee(@PathVariable Integer employeeID, @RequestBody Employee newEmployee) {
-        return employeeService.updateEmployee(employeeID,newEmployee);
+        return employeeService.updateEmployee(employeeID, newEmployee);
     }
 }
