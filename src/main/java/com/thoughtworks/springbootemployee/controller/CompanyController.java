@@ -30,4 +30,23 @@ public class CompanyController {
         return company;
     }
 
+
+    @DeleteMapping({"/{companyID}"})
+    public void delete(@PathVariable Integer companyID) {
+        companies.stream().filter(company -> company.getCompanyId()
+                .equals(companyID)).findFirst().ifPresent(companies::remove);
+    }
+
+    @PutMapping({"/{companyID}"})
+    public Company updateCompany(@PathVariable Integer companyID, @RequestBody Company updateCompany) {
+        companies.stream()
+                .filter(company -> companyID.equals(company.getCompanyId()))
+                .findFirst()
+                .ifPresent(employee -> {
+                    companies.remove(employee);
+                    companies.add(updateCompany);
+                });
+        return updateCompany;
+    }
+
 }
