@@ -32,6 +32,7 @@ public class EmployeeService {
         Optional<Employee> employee = employeeRepository.findById(employeeId);
         employee.ifPresent(employeeRepository::remove);
     }
+
     public Employee updateEmployee(Integer employeeId, Employee newEmployee) {
         employeeRepository.findById(employeeId)
                 .ifPresent(employee -> {
@@ -39,5 +40,13 @@ public class EmployeeService {
                     employeeRepository.save(newEmployee);
                 });
         return newEmployee;
+    }
+
+    public List<Employee> getByGender(String gender) {
+        return employeeRepository.getByGender(gender);
+    }
+
+    public List<Employee> getByPage(Integer page, Integer pageSize) {
+        return employeeRepository.getByPage(page, pageSize);
     }
 }
