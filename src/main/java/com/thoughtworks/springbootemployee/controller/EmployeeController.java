@@ -30,11 +30,13 @@ public class EmployeeController {
                 .equalsIgnoreCase(gender)).collect(Collectors.toList());
     }
 
-    @GetMapping(params = {"pageNo", "pageSize"})
+    @GetMapping(params = {"page", "pageSize"})
     public List<Employee> getByPage(
-            @RequestParam("pageNo") Integer pageNo,
+            @RequestParam("page") Integer page,
             @RequestParam("pageSize") Integer pageSize) {
-        return employees.stream().skip(pageSize * pageNo).limit(pageSize)
+        return employees.stream()
+                .skip(pageSize * page)
+                .limit(pageSize)
                 .collect(Collectors.toList());
     }
 

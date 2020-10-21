@@ -1,7 +1,6 @@
 package com.thoughtworks.springbootemployee.repository;
 
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.service.EmployeeService;
 
 import java.util.ArrayList;
 import java.util.List;
