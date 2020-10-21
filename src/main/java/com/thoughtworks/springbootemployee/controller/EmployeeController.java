@@ -46,8 +46,7 @@ public class EmployeeController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public Employee createEmployee(@RequestBody Employee newEmployee) {
-        employeeService.getAll().add(newEmployee);
-        return newEmployee;
+        return employeeService.create(newEmployee);
     }
 
     @DeleteMapping({"/{employeeID}"})
