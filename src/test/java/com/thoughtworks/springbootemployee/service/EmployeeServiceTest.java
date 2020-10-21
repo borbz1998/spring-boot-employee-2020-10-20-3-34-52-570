@@ -49,7 +49,7 @@ class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-
+        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
         when(employeeRepository.findById(1)).thenReturn(Optional
                 .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
@@ -81,20 +81,18 @@ class EmployeeServiceTest {
 
     @Test
     void should_return_updated_employee_given_employee_id() {
-        //given
+        // given
+        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        when(employeeRepository.save(employeeRequest)).thenReturn(employeeRequest);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
 
-        when(employeeRepository.findById(1)).thenReturn(Optional
-                .of(new Employee(1, "Charlie", 18, 150, "Male")));
-
         // when
-        employeeService.updateEmployee(1,
-                (new Employee(2, "Janelle", 18, 150, "female")));
+        Employee actualResult = employeeService.updateEmployee(1,
+                (new Employee(1, "Janelle", 18, 150, "female")));
 
-        //then
-        when(employeeRepository.findById(2)).thenReturn(Optional
-                .of(new Employee(2, "Charlie", 18, 150, "female")));
+        // then
+        Assertions.assertEquals("Janelle", actualResult.getName());
     }
 
     @Test
@@ -116,20 +114,17 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_gender_when_search_given_3_employee_request() {
-        //GIVEN
-        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "male");
-        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "male");
-        Employee employeeRequest3 = new Employee(2, "Charlie", 10, 150, "female");
+    void should_return_2_company_when_getByPage_given_employee_request() {
+        // GIVEN
+        List<Employee> employeeList = asList(new Employee(), new Employee());
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
 
-        EmployeeRepository repository = Mockito.mock(EmployeeRepository.class);
-        when(repository.findAll()).thenReturn(asList(employeeRequest, employeeRequest2, employeeRequest3));
-        EmployeeService employeeService = new EmployeeService(repository);
+        when(employeeRepository.getByPage(1, 2)).thenReturn(employeeList);
 
-        List<Employee> employeeList = asList(employeeRequest, employeeRequest2);
-        when(repository.getByGender("male")).thenReturn(employeeList);
-        List<Employee> actual = employeeService.getByGender("male");
-        Assertions.assertEquals(2, actual.size());
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        // WHEN
+        List<Employee> employeeActual = employeeService.getByPage(1, 2);
+        // THEN
+        Assertions.assertEquals(2, employeeActual.size());
     }
-
 }
