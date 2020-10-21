@@ -23,10 +23,6 @@ public class EmployeeService {
         return employeeRepository.save(newEmployee);
     }
 
-    public Employee delete(Employee newEmployee) {
-        return employeeRepository.remove(newEmployee);
-    }
-
     public Employee get(Integer employeeId) {
         return employeeRepository.findById(employeeId).orElse(null);
     }

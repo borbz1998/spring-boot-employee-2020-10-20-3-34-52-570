@@ -44,24 +44,6 @@ class EmployeeServiceTest {
         Assertions.assertEquals(1, actualResult.getId());
     }
 
-    @Test
-    void should_return_employee_when_employee_is_deleted() {
-        //given
-        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        when(employeeRepository.save(employeeRequest)).thenReturn(employeeRequest);
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
-
-        // when
-        Employee actualResult = employeeService.create(employeeRequest);
-//        when(employeeRepository.remove(employeeRequest)).thenReturn(employeeRequest);
-//        Employee actualResult = employeeService.delete(employeeRequest);
-        int actualSize = employeeRepository.getEmployees().size();
-
-        //then
-
-        Assertions.assertEquals(1, actualSize);
-    }
 
     @Test
     void should_get_employee_given_employee_id() {
@@ -69,7 +51,8 @@ class EmployeeServiceTest {
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
 
-        when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee(1, "Charlie", 18, 150, "Male")));
+        when(employeeRepository.findById(1)).thenReturn(Optional
+                .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
         // when
         Employee actualResult = employeeService.get(1);
@@ -85,12 +68,14 @@ class EmployeeServiceTest {
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
 
-        when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee(1, "Charlie", 18, 150, "Male")));
+        when(employeeRepository.findById(1)).thenReturn(Optional
+                .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
         // when
         employeeService.delete(1);
 
         //then
-        Mockito.verify(employeeRepository, Mockito.times(1)).remove(Mockito.any(Employee.class));
+        Mockito.verify(employeeRepository, Mockito.times(1))
+                .remove(Mockito.any(Employee.class));
     }
 }

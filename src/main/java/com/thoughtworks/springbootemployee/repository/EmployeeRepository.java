@@ -23,14 +23,13 @@ public class EmployeeRepository {
         return employees;
     }
 
-    public Employee save(Employee newEmployee) {
-        employees.add(newEmployee);
-        return newEmployee;
+    public Employee save(Employee employee) {
+        employees.add(employee);
+        return employee;
     }
 
-    public Employee remove(Employee removeEmployee) {
-        employees.remove(removeEmployee);
-        return removeEmployee;
+    public void remove(Employee employee) {
+        employees.remove(employee);
     }
 
     public Optional<Employee> findById(Integer employeeId) {
