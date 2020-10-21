@@ -5,10 +5,8 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CompanyService {
@@ -32,13 +30,23 @@ public class CompanyService {
         return companyRepository.findById(companyId).orElse(null);
     }
 
-    public void deleteCompany(Integer companyId) {
-        Optional<Company> company = companyRepository.findById(companyId);
-        company.ifPresent(companyRepository::remove);
+    public void deleteCompanyEmployee(Integer companyId) {
+        companyRepository.findById(companyId)
+                .ifPresent(company -> company.getEmployeeList()
+                .forEach(employee -> employeeRepository.remove(employee)));
     }
-    public List<Employee> getCompanyEmployee(@PathVariable Integer companyID) {
+
+    public List<Employee> getCompanyEmployee(Integer companyID) {
         return companyRepository.findById(companyID)
                 .map(Company::getEmployeeList).orElse(null);
+    }
+
+    public Company updateCompany(Integer companyID, Company updateCompany) {
+        companyRepository.findById(companyID).ifPresent(company -> {
+            companyRepository.remove(company);
+            companyRepository.save(updateCompany);
+        });
+        return updateCompany;
     }
 
 }

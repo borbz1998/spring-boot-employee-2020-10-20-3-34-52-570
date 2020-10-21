@@ -38,8 +38,6 @@ public class EmployeeService {
                     employeeRepository.remove(employee);
                     employeeRepository.save(newEmployee);
                 });
-        Optional<Employee> employee = employeeRepository.findById(employeeId);
-        employee.ifPresent(employeeRepository::remove);
         return newEmployee;
     }
 }

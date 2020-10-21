@@ -27,8 +27,7 @@ public class CompanyRepository {
                 .findFirst();
     }
 
-    public Company remove(Company company) {
+    public void remove(Company company) {
         companyList.remove(company);
-        return company;
     }
 }
