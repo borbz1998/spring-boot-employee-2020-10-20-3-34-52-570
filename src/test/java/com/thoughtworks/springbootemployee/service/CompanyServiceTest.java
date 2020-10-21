@@ -47,7 +47,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_get_employee_given_employee_id() {
+    void should_get_company_given_company_id() {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);

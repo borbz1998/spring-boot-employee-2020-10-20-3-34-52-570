@@ -4,6 +4,7 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockingDetails;
 import org.mockito.Mockito;
 
 import java.util.List;
@@ -76,5 +77,20 @@ class EmployeeServiceTest {
         //then
         Assertions.assertEquals(1, actualResult.getId());
         Assertions.assertEquals("Charlie", actualResult.getName());
+    }
+
+    @Test
+    void should_delete_employee_given_employee_id() {
+        //given
+        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+
+        when(employeeRepository.findById(1)).thenReturn(Optional.of(new Employee(1, "Charlie", 18, 150, "Male")));
+
+        // when
+        employeeService.delete(1);
+
+        //then
+        Mockito.verify(employeeRepository, Mockito.times(1)).remove(Mockito.any(Employee.class));
     }
 }

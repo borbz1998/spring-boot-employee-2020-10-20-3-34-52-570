@@ -5,6 +5,7 @@ import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -28,5 +29,10 @@ public class EmployeeService {
 
     public Employee get(Integer employeeId) {
         return employeeRepository.findById(employeeId).orElse(null);
+    }
+
+    public void delete(Integer employeeId) {
+        Optional<Employee> employee = employeeRepository.findById(employeeId);
+        employee.ifPresent(employeeRepository::remove);
     }
 }
