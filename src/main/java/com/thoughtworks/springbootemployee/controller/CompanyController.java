@@ -65,10 +65,7 @@ public class CompanyController {
 
     @GetMapping({"/{companyID}/employee"})
     public List<Employee> getEmployees(@PathVariable Integer companyID) {
-        return companyService.getAllCompany().stream().filter(company -> company.getCompanyId()
-                .equals(companyID))
-                .findFirst()
-                .map(Company::getEmployeeList).orElse(null);
+        return companyService.getCompanyEmployee(companyID);
     }
 
 }

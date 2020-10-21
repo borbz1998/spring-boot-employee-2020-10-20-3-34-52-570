@@ -1,9 +1,11 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,4 +36,9 @@ public class CompanyService {
         Optional<Company> company = companyRepository.findById(companyId);
         company.ifPresent(companyRepository::remove);
     }
+    public List<Employee> getCompanyEmployee(@PathVariable Integer companyID) {
+        return companyRepository.findById(companyID)
+                .map(Company::getEmployeeList).orElse(null);
+    }
+
 }

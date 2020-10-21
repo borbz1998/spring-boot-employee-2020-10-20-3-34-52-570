@@ -57,7 +57,8 @@ class CompanyServiceTest {
         CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
         CompanyService companyService = new CompanyService(companyRepository,employeeRepository);
 
-        when(companyRepository.findById(1)).thenReturn(Optional.of(new Company(1, "OOCL", employeeList.size(), employeeList)));
+        when(companyRepository.findById(1)).thenReturn(Optional
+                .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
 
         // when
         Company actualResult = companyService.getCompany(1);
