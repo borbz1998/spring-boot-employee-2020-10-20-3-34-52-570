@@ -34,7 +34,8 @@ public class EmployeeController {
     public List<Employee> getByPage(
             @RequestParam("pageNo") Integer pageNo,
             @RequestParam("pageSize") Integer pageSize) {
-        return employees.stream().skip(pageNo).limit(pageSize).collect(Collectors.toList());
+        return employees.stream().skip(pageSize * pageNo).limit(pageSize)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
