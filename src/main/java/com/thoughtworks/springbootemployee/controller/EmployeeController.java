@@ -36,4 +36,10 @@ public class EmployeeController {
         employees.add(newEmployee);
         return newEmployee;
     }
+
+    @DeleteMapping({"/{employeeID}"})
+    public void delete(@PathVariable Integer employeeID) {
+        employees.stream().filter(employee -> employee.getId()
+                .equals(employeeID)).findFirst().ifPresent(employees::remove);
+    }
 }
