@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.repository;
 
 import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.Employee;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,5 +22,10 @@ public class CompanyRepository {
     public Optional<Company> findById(Integer companyId) {
         return companyList.stream().filter(company -> company.getCompanyId().equals(companyId))
                 .findFirst();
+    }
+
+    public Company remove(Company company) {
+        companyList.remove(company);
+        return company;
     }
 }

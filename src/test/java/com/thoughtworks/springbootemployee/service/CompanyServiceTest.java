@@ -3,6 +3,7 @@ package com.thoughtworks.springbootemployee.service;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -61,5 +62,21 @@ class CompanyServiceTest {
         //then
         Assertions.assertEquals(1, actualResult.getCompanyId());
         Assertions.assertEquals("OOCL", actualResult.getCompanyName());
+    }
+
+    @Test
+    void should_delete_company_given_company_id() {
+        // given
+        List<Employee> employeeList = asList(new Employee(), new Employee());
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(companyRepository);
+
+        when(companyRepository.findById(1)).thenReturn(Optional.of(new Company(1, "OOCL", employeeList.size(), employeeList)));
+
+        // when
+        companyService.delete(1);
+
+        //then
+        Mockito.verify(companyRepository, Mockito.times(1)).remove(Mockito.any(Company.class));
     }
 }
