@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 
 import java.util.List;
@@ -15,4 +16,9 @@ public class CompanyService {
     public List<Company> getAll() {
         return companyRepository.findAll();
     }
+
+    public Company create(Company newCompany) {
+        return companyRepository.save(newCompany);
+    }
+
 }

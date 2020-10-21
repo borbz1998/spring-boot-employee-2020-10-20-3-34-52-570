@@ -1,9 +1,11 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -28,6 +30,22 @@ class CompanyServiceTest {
         List<Company> actual = employeeService.getAll();
         //then
         assertEquals(2, actual.size());
+    }
+
+    @Test
+    void should_create_employee_when_create_employee() {
+        //given
+        List<Employee> employeeList = asList(new Employee(), new Employee());
+        Company companyRequest = new Company(1, "OOCL", employeeList.size(), employeeList);
+        CompanyRepository companyRepository = Mockito.mock(CompanyRepository.class);
+        when(companyRepository.save(companyRequest)).thenReturn(companyRequest);
+        CompanyService companyService = new CompanyService(companyRepository);
+
+        // when
+        Company actualResult = companyService.create(companyRequest);
+
+        //then
+        Assertions.assertEquals(1, actualResult.getCompanyId());
     }
 
 }
