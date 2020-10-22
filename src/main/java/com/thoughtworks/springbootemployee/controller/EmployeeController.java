@@ -13,8 +13,11 @@ import java.util.List;
 @RequestMapping("/employee")
 public class EmployeeController {
     private EmployeeRepository employeeRepository;
-    private EmployeeService employeeService =
-            new EmployeeService(employeeRepository);
+    private EmployeeService employeeService;
+
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
     @GetMapping
     public List<Employee> getAll() {

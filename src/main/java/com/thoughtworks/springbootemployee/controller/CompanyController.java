@@ -5,25 +5,22 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepositoryLegacy;
 import com.thoughtworks.springbootemployee.service.CompanyService;
-import org.springframework.data.domain.PageRequest;
+import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
-    private CompanyRepository companyRepository;
+    private CompanyService companyService;
+    private EmployeeService employeeService;
 
-    private EmployeeRepositoryLegacy employeeRepository;
-
-//    private CompanyService companyService =
-//            new CompanyService(companyRepository, employeeRepository);
-
-    private CompanyService companyService =
-            new CompanyService(companyRepository);
+    public CompanyController(CompanyService companyService, EmployeeService employeeService) {
+        this.companyService = companyService;
+        this.employeeService = employeeService;
+    }
 
     @GetMapping
     public List<Company> getAllCompanies() {

@@ -17,13 +17,16 @@ public class CompanyService {
     private EmployeeRepositoryLegacy employeeRepositoryLegacy;
     private EmployeeRepository employeeRepository;
 
+
+
 //    public CompanyService(CompanyRepository companyRepositoryLegacy, EmployeeRepositoryLegacy employeeRepositoryLegacy) {
 //        this.companyRepositoryLegacy = companyRepositoryLegacy;
 //        this.employeeRepositoryLegacy = employeeRepositoryLegacy;
 //    }
 
-    public CompanyService(CompanyRepository companyRepositoryLegacy) {
-        this.companyRepository = companyRepositoryLegacy;
+
+    public CompanyService(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
     }
 
     public List<Company> getAllCompany() {
@@ -55,11 +58,13 @@ public class CompanyService {
     }
 
     public Company updateCompany(Integer companyID, Company updateCompany) {
-        companyRepository.findById(companyID).ifPresent(company -> {
-            companyRepository.delete(company);
-            companyRepository.save(updateCompany);
-        });
-        return updateCompany;
+//        companyRepository.findById(companyID).ifPresent(company -> {
+//            companyRepository.delete(company);
+//            companyRepository.save(updateCompany);
+//        });
+//        return updateCompany;
+        updateCompany.setCompany_Id(companyID);
+        return companyRepository.save(updateCompany);
     }
 
     public List<Company> getByPage(Integer page, Integer pageSize) {
