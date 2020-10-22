@@ -64,7 +64,8 @@ public class CompanyService {
 //        });
 //        return updateCompany;
         updateCompany.setCompany_Id(companyID);
-        return companyRepository.save(updateCompany);
+        companyRepository.save(updateCompany);
+        return updateCompany;
     }
 
     public List<Company> getByPage(Integer page, Integer pageSize) {

@@ -35,7 +35,8 @@ public class EmployeeService {
 
     public Employee updateEmployee(Integer employeeId, Employee newEmployee) {
         newEmployee.setId(employeeId);
-        return employeeRepository.save(newEmployee);
+        employeeRepository.save(newEmployee);
+        return newEmployee;
     }
 
     public List<Employee> getByGender(String gender) {

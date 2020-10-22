@@ -19,11 +19,11 @@ public class Company {
     public Company() {
     }
 
-    public Company(Integer company_Id, String companyName, Integer employeesNumber, List<Employee> employeeList) {
+    public Company(Integer company_Id, String companyName, List<Employee> employeeList) {
         this.company_Id = company_Id;
         this.companyName = companyName;
         // TODO: 10/22/2020 remove employees number 
-        this.employeesNumber = employeesNumber;
+        this.employeesNumber = employeeList.size();
         this.employeeList = employeeList;
     }
 

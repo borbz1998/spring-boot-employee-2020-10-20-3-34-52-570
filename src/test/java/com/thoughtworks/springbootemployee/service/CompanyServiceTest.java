@@ -19,10 +19,14 @@ import static org.mockito.Mockito.when;
 
 class CompanyServiceTest {
     private CompanyRepository companyRepository;
+    private EmployeeRepository employeeRepository;
+    private List<Employee> finalEmployeeList;
 
     @BeforeEach
     void setup(){
         companyRepository = Mockito.mock(CompanyRepository.class);
+        employeeRepository = Mockito.mock(EmployeeRepository.class);
+        finalEmployeeList = asList(new Employee(), new Employee());
     }
 
 
@@ -45,7 +49,7 @@ class CompanyServiceTest {
     void should_return_created_company_when_create_company() {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
-        Company companyRequest = new Company(1, "OOCL", employeeList.size(), employeeList);
+        Company companyRequest = new Company(1, "OOCL",  employeeList);
         EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
 
         when(companyRepository.save(companyRequest)).thenReturn(companyRequest);
@@ -62,12 +66,11 @@ class CompanyServiceTest {
     void should_get_specific_company_given_company_id() {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
-        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
 
         CompanyService companyService = new CompanyService(companyRepository);
 
         when(companyRepository.findById(1)).thenReturn(Optional
-                .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
+                .of(new Company(1, "OOCL",  employeeList)));
 
         // when
         Company actualResult = companyService.getCompany(1);
@@ -116,12 +119,11 @@ class CompanyServiceTest {
     void should_return_company_employees_on_list_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
-        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
 
         CompanyService companyService = new CompanyService(companyRepository);
 
         when(companyRepository.findById(1)).thenReturn(Optional
-                .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
+                .of(new Company(1, "OOCL",  employeeList)));
 
         // when
         List<Employee> finalEmployee = companyService.getCompanyEmployee(1);
@@ -135,11 +137,10 @@ class CompanyServiceTest {
     @Test
     void should_return_updated_company_given_company_id() {
         // given
-        List<Employee> employeeList = asList(new Employee(), new Employee());
-//        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
-//        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
+        List<Employee> employeeList = asList(new Employee(1, "Charlie", 18, 150, "Male"),
+                new Employee(2, "Leo", 18, 150, "Male"));
 
-        Company company = new Company(123, "OOCL", employeeList.size(), employeeList);
+        Company company = new Company(1, "OOCL",  employeeList);
 
         when(companyRepository.save(company)).thenReturn(company);
         CompanyService companyService = new CompanyService(companyRepository);
@@ -148,8 +149,8 @@ class CompanyServiceTest {
         List<Employee> newEmployeeList = asList(new Employee(), new Employee(), new Employee());
 
         // when
-        Company actualResult = companyService.updateCompany(123,
-                (new Company(123, "JANELLE INC.", newEmployeeList.size(), newEmployeeList)));
+        Company actualResult = companyService.updateCompany(1,
+                (new Company(1, "JANELLE INC.", newEmployeeList)));
 
         // then
         Assertions.assertEquals("JANELLE INC.", actualResult.getCompanyName());
