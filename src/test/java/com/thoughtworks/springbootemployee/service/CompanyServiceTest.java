@@ -9,12 +9,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class CompanyServiceTest {
@@ -96,24 +100,26 @@ class CompanyServiceTest {
         Mockito.verify(companyRepository, Mockito.times(1)).deleteById(Mockito.any(Integer.class));
     }
 
-//    @Test
-//    void should_return_2_company_when_getByPage_given_company_request() {
-//        //GIVEN
-//        List<Employee> employeeList = asList(new Employee(), new Employee());
-//        List<Employee> employeeList2 = asList(new Employee(), new Employee());
-//        List<Company> companies =
-//                asList(new Company(1, "OOCL", employeeList.size(), employeeList),
-//                        new Company(1, "OOL", employeeList2.size(), employeeList2));
-//
-//        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
-//
-//        when(companyRepositoryLegacy.getByPage(1, 2)).thenReturn(companies);
-//        CompanyService companyService = new CompanyService(companyRepositoryLegacy);
-//        //WHEN
-//        List<Company> companyActual = companyService.getByPage(1, 2);
-//        //THEN
-//        Assertions.assertEquals(2, companyActual.size());
-//    }
+    @Test
+    void should_return_2_company_when_getByPage_given_company_request() {
+
+        Company companyRequest = new Company(1,"OOCL",new ArrayList<>());
+        Company companyRequest2 = new Company(2,"COSCO",new ArrayList<>());
+        Company companyRequest3 = new Company(3,"OOCL",new ArrayList<>());
+        Company companyRequest4 = new Company(4,"OOCL",new ArrayList<>());
+        //given
+        Page<Company> mockPage = mock(Page.class);
+        when(companyRepository.save(companyRequest)).thenReturn(companyRequest);
+        when(companyRepository.save(companyRequest2)).thenReturn(companyRequest2);
+        when(companyRepository.save(companyRequest3)).thenReturn(companyRequest3);
+        when(companyRepository.save(companyRequest4)).thenReturn(companyRequest4);
+        when(companyRepository.findAll(PageRequest.of(0, 2))).thenReturn(mockPage);
+        when(mockPage.toList()).thenReturn(asList(companyRequest, companyRequest2));
+        CompanyService companyService = new CompanyService(companyRepository);
+        //when
+        List<Company> fetchedCompany = companyService.getByPage(0,2);
+        assertEquals(2, fetchedCompany.size());
+    }
 
     @Test
     void should_return_company_employees_on_list_given_company_id() {
