@@ -14,6 +14,7 @@ public class Company {
     public Company(Integer companyId, String companyName, Integer employeesNumber, List<Employee> employeeList) {
         this.companyId = companyId;
         this.companyName = companyName;
+        // TODO: 10/22/2020 remove employees number 
         this.employeesNumber = employeesNumber;
         this.employeeList = employeeList;
     }
@@ -34,6 +35,7 @@ public class Company {
         this.companyName = companyName;
     }
 
+    // TODO: 10/22/2020 Return employee size 
     public Integer getEmployeesNumber() {
         return employeesNumber;
     }

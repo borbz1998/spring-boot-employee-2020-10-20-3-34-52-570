@@ -39,6 +39,7 @@ public class EmployeeRepository {
                 .equalsIgnoreCase(gender)).collect(Collectors.toList());
     }
 
+    // TODO: 10/22/2020 Use long for code smell
     public List<Employee> getByPage(Integer page, Integer pageSize) {
         return employees.stream()
                 .skip(pageSize * (page - 1))

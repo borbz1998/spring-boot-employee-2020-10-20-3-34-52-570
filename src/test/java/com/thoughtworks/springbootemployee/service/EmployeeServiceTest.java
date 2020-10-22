@@ -24,6 +24,7 @@ class EmployeeServiceTest {
 
         // when
         List<Employee> actual = employeeService.getAllEmployees();
+
         //then
         assertEquals(2, actual.size());
     }
@@ -49,7 +50,6 @@ class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-//        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
         when(employeeRepository.findById(1)).thenReturn(Optional
                 .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
@@ -93,6 +93,7 @@ class EmployeeServiceTest {
 
         // then
         Assertions.assertEquals("Janelle", actualResult.getName());
+        // AssertSame
     }
 
     @Test
@@ -107,8 +108,10 @@ class EmployeeServiceTest {
         employeeService.createEmployee(employeeRequest);
         employeeService.createEmployee(employeeRequest2);
         employeeService.createEmployee(employeeRequest3);
+
         //when
         List<Employee> employeeList = employeeService.getByGender("Male");
+
         // then
         Assertions.assertEquals(2, employeeList.size());
     }

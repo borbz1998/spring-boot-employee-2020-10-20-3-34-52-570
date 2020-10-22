@@ -24,10 +24,10 @@ class CompanyServiceTest {
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         List<Company> expectedResult = asList(new Company(), new Company());
         when(companyRepository.findAll()).thenReturn(expectedResult);
-        CompanyService employeeService = new CompanyService(companyRepository, employeeRepository);
+        CompanyService companyService = new CompanyService(companyRepository, employeeRepository);
 
         // when
-        List<Company> actual = employeeService.getAllCompany();
+        List<Company> actual = companyService.getAllCompany();
         //then
         assertEquals(2, actual.size());
     }
@@ -66,6 +66,7 @@ class CompanyServiceTest {
         //then
         Assertions.assertEquals(1, actualResult.getCompanyId());
         Assertions.assertEquals("OOCL", actualResult.getCompanyName());
+        // Assert Same actual
     }
 
     @Test
@@ -106,7 +107,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_return_company_employee_on_list_given_company_id() {
+    void should_return_company_employees_on_list_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
@@ -122,6 +123,8 @@ class CompanyServiceTest {
         //then
         Assertions.assertEquals(2, finalEmployee.size());
     }
+
+    // TODO: 10/22/2020 Should create test that will check if the List of employee is empty 
 
     @Test
     void should_return_updated_company_given_company_id() {

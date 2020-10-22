@@ -6,6 +6,7 @@ import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -38,7 +39,7 @@ public class CompanyService {
 
     public List<Employee> getCompanyEmployee(Integer companyID) {
         return companyRepository.findById(companyID)
-                .map(Company::getEmployeeList).orElse(null);
+                .map(Company::getEmployeeList).orElse(Collections.emptyList());
     }
 
     public Company updateCompany(Integer companyID, Company updateCompany) {
