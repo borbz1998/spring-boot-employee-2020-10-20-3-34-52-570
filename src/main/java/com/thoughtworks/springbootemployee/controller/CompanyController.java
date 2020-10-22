@@ -1,58 +1,63 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.service.EmployeeService;
-import org.springframework.http.HttpStatus;
+import com.thoughtworks.springbootemployee.repository.CompanyRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
-    private EmployeeService employeeService;
+    private CompanyRepository companyRepository;
 
-    public CompanyController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
+    public CompanyController(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
     }
 
-
-    @GetMapping
-    public List<Employee> getAll() {
-        return employeeService.getAllEmployees();
+    public List<Company> getAllCompany() {
+        return companyRepository.findAll();
     }
 
-    @GetMapping({"/{employeeID}"})
-    public Employee getByID(@PathVariable Integer employeeID) {
-        return employeeService.getAllEmployees().stream().filter(employee -> employee.getId()
-                .equals(employeeID)).findFirst().orElse(null);
+    public Company createCompany(Company newCompany) {
+        return companyRepository.save(newCompany);
     }
 
-    @GetMapping(params = "gender")
-    public List<Employee> getByGender(@RequestParam("gender") String gender) {
-        return employeeService.getByGender(gender);
+    public Company getCompany(Integer companyId) {
+        return companyRepository.findById(companyId).orElse(null);
     }
 
-    @GetMapping(params = {"page", "pageSize"})
-    public List<Employee> getByPage(
-            @RequestParam("page") Integer page,
-            @RequestParam("pageSize") Integer pageSize) {
-        return employeeService.getByPage(page, pageSize);
+//    public void deleteCompanyEmployee(Integer companyId) {
+//        companyRepository.findById(companyId)
+//                .ifPresent(company -> company.getEmployeeList()
+//                        .forEach(employee -> employeeRepository.delete(employee)));
+//    }
+
+    public void deleteCompanyEmployee(Integer companyId) {
+        companyRepository.deleteById(companyId);
+
     }
 
-    @PostMapping
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public Employee createEmployee(@RequestBody Employee newEmployee) {
-        return employeeService.createEmployee(newEmployee);
+    public List<Employee> getCompanyEmployee(Integer companyID) {
+        return companyRepository.findById(companyID)
+                .map(Company::getEmployeeList).orElse(Collections.emptyList());
     }
 
-    @DeleteMapping({"/{employeeID}"})
-    public void deleteEmployee(@PathVariable Integer employeeID) {
-        employeeService.deleteEmployee(employeeID);
+    public Company updateCompany(Integer companyID, Company updateCompany) {
+        companyRepository.findById(companyID).ifPresent(company -> {
+            companyRepository.delete(company);
+            companyRepository.save(updateCompany);
+        });
+        return updateCompany;
     }
 
-    @PutMapping(path = "/{employeeID}")
-    public Employee updateEmployee(@PathVariable Integer employeeID, @RequestBody Employee newEmployee) {
-        return employeeService.updateEmployee(employeeID, newEmployee);
+    public List<Company> getByPage(Integer page, Integer pageSize) {
+        PageRequest pageable = PageRequest.of(page, pageSize);
+        return companyRepository.findAll(pageable).toList();
+//        return null;
+//        return companyRepositoryLegacy.getByPage(page, pageSize);
     }
 }
