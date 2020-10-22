@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 import java.util.Optional;
@@ -100,7 +102,7 @@ public class EmployeeIntegrationTest {
 
         List<Employee> employeeList = employeeRepository.findAll();
 
-        mockMvc.perform(get("/employee/"+employeeList.get(0).getId()))
+        mockMvc.perform(get("/employee/{employeeId}",1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.name").value("Charlie"))
@@ -121,27 +123,6 @@ public class EmployeeIntegrationTest {
         //given
         Employee employee = new Employee(1, "Tom", 18,  5000,"Male");
         employeeRepository.save(employee);
-
-//        String employeeAsJson = "{\n" +
-//                "    \"id\": 1,\n" +
-//                "    \"name\": \"Charlie\",\n" +
-//                "    \"age\": 18,\n" +
-//                "    \"gender\": \"Male\",\n" +
-//                "    \"salary\": 5000\n" +
-//                "}";
-//        //when then
-//        mockMvc.perform(post("/employee")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(employeeAsJson))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.id").isNumber())
-//                .andExpect(jsonPath("$.name").value("Charlie"))
-//                .andExpect(jsonPath("$.age").value(18))
-//                .andExpect(jsonPath("$.gender").value("Male"))
-//                .andExpect(jsonPath("$.salary").value(5000));
-
-//        List<Employee> employeeList = employeeRepository.findAll();
-
         String updateEmployeeAsJson = "{\n" +
                 "    \"id\": 1,\n" +
                 "    \"name\": \"Leo\",\n" +
@@ -150,7 +131,7 @@ public class EmployeeIntegrationTest {
                 "    \"salary\": 2500\n" +
                 "}";
         //when then
-        mockMvc.perform(put("/employee/"+1)
+        mockMvc.perform(put("/employee/{employeeId}",1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(updateEmployeeAsJson))
                 .andExpect(status().isOk())
@@ -160,7 +141,7 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.gender").value("Male"))
                 .andExpect(jsonPath("$.salary").value(2500));
 
-        mockMvc.perform(get("/employee/"+1))
+        mockMvc.perform(get("/employee/{employeeId}",1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.name").value("Leo"))
@@ -175,5 +156,41 @@ public class EmployeeIntegrationTest {
         Assertions.assertEquals(20, updateEmployee.get().getAge());
         Assertions.assertEquals("Male", updateEmployee.get().getGender());
         Assertions.assertEquals(2500, updateEmployee.get().getSalary());
+    }
+
+    @Test
+    void should_delete_employee_when_delete_given_company_id() throws Exception{
+        //given
+        Employee employee = new Employee(1,"Leo",16,5000,"Male");
+        employeeRepository.save(employee);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/employee/{employeeId}",1))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void should_find_all_employee_when_filter_given_gender_is_Male() throws Exception {
+        //given
+        Employee firstEmployee = new Employee(1,"Leo",16,5000,"Male");
+        Employee secondEmployee = new Employee(2,"Charlie",16,5000,"Male");
+        Employee thirdEmployee = new Employee(3,"Olive",16,5000,"Female");
+        employeeRepository.save(firstEmployee);
+        employeeRepository.save(secondEmployee);
+        employeeRepository.save(thirdEmployee);
+        //when then
+        mockMvc.perform(get("/employee?gender=Male")).andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").isNumber())
+                .andExpect(jsonPath("$[0].name").value("Leo"))
+                .andExpect(jsonPath("$[0].age").value(16))
+                .andExpect(jsonPath("$[0].gender").value("Male"))
+                .andExpect(jsonPath("$[0].salary").value(5000))
+                .andExpect(jsonPath("$[1].id").isNumber())
+                .andExpect(jsonPath("$[1].name").value("Charlie"))
+                .andExpect(jsonPath("$[1].age").value(16))
+                .andExpect(jsonPath("$[1].gender").value("Male"))
+                .andExpect(jsonPath("$[1].salary").value(5000));
+        List<Employee> employees = employeeRepository.findByGender("Male");
+        Assertions.assertEquals(2,employees.size());
     }
 }
