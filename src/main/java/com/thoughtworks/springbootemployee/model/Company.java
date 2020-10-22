@@ -43,7 +43,6 @@ public class Company {
         this.companyName = companyName;
     }
 
-    // TODO: 10/22/2020 Return employee size 
     public Integer getEmployeesNumber() {
         return employeesNumber;
     }

@@ -27,7 +27,7 @@ class CompanyServiceTest {
     private List<Employee> finalEmployeeList;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         companyRepository = Mockito.mock(CompanyRepository.class);
         employeeRepository = Mockito.mock(EmployeeRepository.class);
         finalEmployeeList = asList(new Employee(), new Employee());
@@ -53,7 +53,7 @@ class CompanyServiceTest {
     void should_return_created_company_when_create_company() {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
-        Company companyRequest = new Company(1, "OOCL",  employeeList);
+        Company companyRequest = new Company(1, "OOCL", employeeList);
         EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
 
         when(companyRepository.save(companyRequest)).thenReturn(companyRequest);
@@ -74,7 +74,7 @@ class CompanyServiceTest {
         CompanyService companyService = new CompanyService(companyRepository);
 
         when(companyRepository.findById(1)).thenReturn(Optional
-                .of(new Company(1, "OOCL",  employeeList)));
+                .of(new Company(1, "OOCL", employeeList)));
 
         // when
         Company actualResult = companyService.getCompany(1);
@@ -103,10 +103,10 @@ class CompanyServiceTest {
     @Test
     void should_return_2_company_when_getByPage_given_company_request() {
 
-        Company companyRequest = new Company(1,"OOCL",new ArrayList<>());
-        Company companyRequest2 = new Company(2,"COSCO",new ArrayList<>());
-        Company companyRequest3 = new Company(3,"OOCL",new ArrayList<>());
-        Company companyRequest4 = new Company(4,"OOCL",new ArrayList<>());
+        Company companyRequest = new Company(1, "OOCL", new ArrayList<>());
+        Company companyRequest2 = new Company(2, "COSCO", new ArrayList<>());
+        Company companyRequest3 = new Company(3, "OOCL", new ArrayList<>());
+        Company companyRequest4 = new Company(4, "OOCL", new ArrayList<>());
         //given
         Page<Company> mockPage = mock(Page.class);
         when(companyRepository.save(companyRequest)).thenReturn(companyRequest);
@@ -117,7 +117,7 @@ class CompanyServiceTest {
         when(mockPage.toList()).thenReturn(asList(companyRequest, companyRequest2));
         CompanyService companyService = new CompanyService(companyRepository);
         //when
-        List<Company> fetchedCompany = companyService.getByPage(0,2);
+        List<Company> fetchedCompany = companyService.getByPage(0, 2);
         assertEquals(2, fetchedCompany.size());
     }
 
@@ -129,7 +129,7 @@ class CompanyServiceTest {
         CompanyService companyService = new CompanyService(companyRepository);
 
         when(companyRepository.findById(1)).thenReturn(Optional
-                .of(new Company(1, "OOCL",  employeeList)));
+                .of(new Company(1, "OOCL", employeeList)));
 
         // when
         List<Employee> finalEmployee = companyService.getCompanyEmployee(1);
@@ -146,7 +146,7 @@ class CompanyServiceTest {
         List<Employee> employeeList = asList(new Employee(1, "Charlie", 18, 150, "Male"),
                 new Employee(2, "Leo", 18, 150, "Male"));
 
-        Company company = new Company(1, "OOCL",  employeeList);
+        Company company = new Company(1, "OOCL", employeeList);
 
         when(companyRepository.save(company)).thenReturn(company);
         CompanyService companyService = new CompanyService(companyRepository);

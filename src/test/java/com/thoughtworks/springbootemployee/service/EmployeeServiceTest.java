@@ -7,18 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -143,7 +137,7 @@ class EmployeeServiceTest {
         when(mockPage.toList()).thenReturn(asList(employeeRequest, employeeRequest2));
         EmployeeService employeeService = new EmployeeService(employeeRepository);
         //when
-        List<Employee> fetchedEmployees = employeeService.getByPage(0,2);
+        List<Employee> fetchedEmployees = employeeService.getByPage(0, 2);
 
         //then
         assertEquals(2, fetchedEmployees.size());

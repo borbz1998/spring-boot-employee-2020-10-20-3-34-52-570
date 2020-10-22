@@ -9,17 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
-
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -105,7 +102,7 @@ public class EmployeeIntegrationTest {
 
         List<Employee> employeeList = employeeRepository.findAll();
 
-        mockMvc.perform(get("/employee/{employeeId}",1))
+        mockMvc.perform(get("/employee/{employeeId}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.name").value("Charlie"))
@@ -124,7 +121,7 @@ public class EmployeeIntegrationTest {
     @Test
     void should_update_employee_when_given_employee_id() throws Exception {
         //given
-        Employee employee = new Employee(1, "Tom", 18,  5000,"Male");
+        Employee employee = new Employee(1, "Tom", 18, 5000, "Male");
         employeeRepository.save(employee);
         String updateEmployeeAsJson = "{\n" +
                 "    \"id\": 1,\n" +
@@ -134,7 +131,7 @@ public class EmployeeIntegrationTest {
                 "    \"salary\": 2500\n" +
                 "}";
         //when then
-        mockMvc.perform(put("/employee/{employeeId}",1)
+        mockMvc.perform(put("/employee/{employeeId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(updateEmployeeAsJson))
                 .andExpect(status().isOk())
@@ -144,7 +141,7 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.gender").value("Male"))
                 .andExpect(jsonPath("$.salary").value(2500));
 
-        mockMvc.perform(get("/employee/{employeeId}",1))
+        mockMvc.perform(get("/employee/{employeeId}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.name").value("Leo"))
@@ -162,22 +159,22 @@ public class EmployeeIntegrationTest {
     }
 
     @Test
-    void should_delete_employee_when_delete_given_company_id() throws Exception{
+    void should_delete_employee_when_delete_given_company_id() throws Exception {
         //given
-        Employee employee = new Employee(1,"Leo",16,5000,"Male");
+        Employee employee = new Employee(1, "Leo", 16, 5000, "Male");
         employeeRepository.save(employee);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.delete("/employee/{employeeId}",1))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/employee/{employeeId}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void should_find_all_employee_when_filter_given_gender_is_Male() throws Exception {
         //given
-        Employee firstEmployee = new Employee(1,"Leo",16,5000,"Male");
-        Employee secondEmployee = new Employee(2,"Charlie",16,5000,"Male");
-        Employee thirdEmployee = new Employee(3,"Olive",16,5000,"Female");
+        Employee firstEmployee = new Employee(1, "Leo", 16, 5000, "Male");
+        Employee secondEmployee = new Employee(2, "Charlie", 16, 5000, "Male");
+        Employee thirdEmployee = new Employee(3, "Olive", 16, 5000, "Female");
         employeeRepository.save(firstEmployee);
         employeeRepository.save(secondEmployee);
         employeeRepository.save(thirdEmployee);
@@ -194,15 +191,15 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$[1].gender").value("Male"))
                 .andExpect(jsonPath("$[1].salary").value(5000));
         List<Employee> employees = employeeRepository.findByGender("Male");
-        Assertions.assertEquals(2,employees.size());
+        Assertions.assertEquals(2, employees.size());
     }
 
     @Test
     void should_return_page_1_and_2_for_employee_when_pagination_given_page_1_page_size_2() throws Exception {
         //given
-        Employee firstEmployee = new Employee(1,"Leo",16,5000,"Male");
-        Employee secondEmployee = new Employee(2,"Charlie",16,5000,"Male");
-        Employee thirdEmployee = new Employee(3,"Olive",16,5000,"Female");
+        Employee firstEmployee = new Employee(1, "Leo", 16, 5000, "Male");
+        Employee secondEmployee = new Employee(2, "Charlie", 16, 5000, "Male");
+        Employee thirdEmployee = new Employee(3, "Olive", 16, 5000, "Female");
         employeeRepository.save(firstEmployee);
         employeeRepository.save(secondEmployee);
         employeeRepository.save(thirdEmployee);
@@ -220,12 +217,12 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$[1].salary").value(5000));
         //then
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-        List<Employee> employees = employeeService.getByPage(0,2);
-        Assertions.assertEquals(2,employees.size());
-        Assertions.assertEquals(1,employees.get(0).getId());
-        Assertions.assertEquals("Leo",employees.get(0).getName());
-        Assertions.assertEquals(16,employees.get(0).getAge());
-        Assertions.assertEquals("Male",employees.get(0).getGender());
-        Assertions.assertEquals(5000,employees.get(0).getSalary());
+        List<Employee> employees = employeeService.getByPage(0, 2);
+        Assertions.assertEquals(2, employees.size());
+        Assertions.assertEquals(1, employees.get(0).getId());
+        Assertions.assertEquals("Leo", employees.get(0).getName());
+        Assertions.assertEquals(16, employees.get(0).getAge());
+        Assertions.assertEquals("Male", employees.get(0).getGender());
+        Assertions.assertEquals(5000, employees.get(0).getSalary());
     }
 }

@@ -2,8 +2,6 @@ package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.repository.CompanyRepository;
-import com.thoughtworks.springbootemployee.repository.EmployeeRepositoryLegacy;
 import com.thoughtworks.springbootemployee.service.CompanyService;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.http.HttpStatus;
