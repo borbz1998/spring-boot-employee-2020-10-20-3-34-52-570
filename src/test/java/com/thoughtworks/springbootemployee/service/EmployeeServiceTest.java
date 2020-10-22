@@ -49,7 +49,7 @@ class EmployeeServiceTest {
         //given
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
         EmployeeService employeeService = new EmployeeService(employeeRepository);
-        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
+//        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
         when(employeeRepository.findById(1)).thenReturn(Optional
                 .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
@@ -119,11 +119,11 @@ class EmployeeServiceTest {
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
 
-        when(employeeRepository.getByPage(1, 2)).thenReturn(employeeList);
-
-        EmployeeService employeeService = new EmployeeService(employeeRepository);
         // WHEN
+        when(employeeRepository.getByPage(1, 2)).thenReturn(employeeList);
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
         List<Employee> employeeActual = employeeService.getByPage(1, 2);
+
         // THEN
         Assertions.assertEquals(2, employeeActual.size());
     }

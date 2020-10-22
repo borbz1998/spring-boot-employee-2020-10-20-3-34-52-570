@@ -34,7 +34,7 @@ public class CompanyRepository {
 
     public List<Company> getByPage(Integer page, Integer pageSize) {
         return companyList.stream()
-                .skip(pageSize * page)
+                .skip(pageSize * (page - 1))
                 .limit(pageSize)
                 .collect(Collectors.toList());
 
