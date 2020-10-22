@@ -3,7 +3,10 @@ package com.thoughtworks.springbootemployee.controller;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepositoryLegacy;
+import com.thoughtworks.springbootemployee.service.CompanyService;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -14,50 +17,53 @@ import java.util.List;
 public class CompanyController {
     private CompanyRepository companyRepository;
 
-    public CompanyController(CompanyRepository companyRepository) {
-        this.companyRepository = companyRepository;
+    private EmployeeRepositoryLegacy employeeRepository;
+
+//    private CompanyService companyService =
+//            new CompanyService(companyRepository, employeeRepository);
+
+    private CompanyService companyService =
+            new CompanyService(companyRepository);
+
+    @GetMapping
+    public List<Company> getAllCompanies() {
+        return companyService.getAllCompany();
     }
 
-    public List<Company> getAllCompany() {
-        return companyRepository.findAll();
+    @GetMapping({"/{companyID}"})
+    public Company getByID(@PathVariable Integer companyID) {
+        return companyService.getCompany(companyID);
     }
 
-    public Company createCompany(Company newCompany) {
-        return companyRepository.save(newCompany);
+    @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public Company addCompany(@RequestBody Company company) {
+        companyService.createCompany(company);
+        return company;
     }
 
-    public Company getCompany(Integer companyId) {
-        return companyRepository.findById(companyId).orElse(null);
+
+    @DeleteMapping({"/{companyID}"})
+    public void delete(@PathVariable Integer companyID) {
+        companyService.deleteCompanyEmployee(companyID);
     }
 
-//    public void deleteCompanyEmployee(Integer companyId) {
-//        companyRepository.findById(companyId)
-//                .ifPresent(company -> company.getEmployeeList()
-//                        .forEach(employee -> employeeRepository.delete(employee)));
-//    }
-
-    public void deleteCompanyEmployee(Integer companyId) {
-        companyRepository.deleteById(companyId);
-
-    }
-
-    public List<Employee> getCompanyEmployee(Integer companyID) {
-        return companyRepository.findById(companyID)
-                .map(Company::getEmployeeList).orElse(Collections.emptyList());
-    }
-
-    public Company updateCompany(Integer companyID, Company updateCompany) {
-        companyRepository.findById(companyID).ifPresent(company -> {
-            companyRepository.delete(company);
-            companyRepository.save(updateCompany);
-        });
+    @PutMapping({"/{companyID}"})
+    public Company updateCompany(@PathVariable Integer companyID, @RequestBody Company updateCompany) {
+        companyService.updateCompany(companyID, updateCompany);
         return updateCompany;
     }
 
-    public List<Company> getByPage(Integer page, Integer pageSize) {
-        PageRequest pageable = PageRequest.of(page, pageSize);
-        return companyRepository.findAll(pageable).toList();
-//        return null;
-//        return companyRepositoryLegacy.getByPage(page, pageSize);
+
+    @GetMapping(params = {"page", "pageSize"})
+    public List<Company> getByPage(
+            @RequestParam("page") Integer page,
+            @RequestParam("pageSize") Integer pageSize) {
+        return companyService.getByPage(page, pageSize);
+    }
+
+    @GetMapping({"/{companyID}/employee"})
+    public List<Employee> getEmployees(@PathVariable Integer companyID) {
+        return companyService.getCompanyEmployee(companyID);
     }
 }
