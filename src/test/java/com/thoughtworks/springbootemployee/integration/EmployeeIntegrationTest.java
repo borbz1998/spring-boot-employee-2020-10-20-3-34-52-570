@@ -2,18 +2,21 @@ package com.thoughtworks.springbootemployee.integration;
 
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
+import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -192,5 +195,37 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$[1].salary").value(5000));
         List<Employee> employees = employeeRepository.findByGender("Male");
         Assertions.assertEquals(2,employees.size());
+    }
+
+    @Test
+    void should_return_page_1_and_2_for_employee_when_pagination_given_page_1_page_size_2() throws Exception {
+        //given
+        Employee firstEmployee = new Employee(1,"Leo",16,5000,"Male");
+        Employee secondEmployee = new Employee(2,"Charlie",16,5000,"Male");
+        Employee thirdEmployee = new Employee(3,"Olive",16,5000,"Female");
+        employeeRepository.save(firstEmployee);
+        employeeRepository.save(secondEmployee);
+        employeeRepository.save(thirdEmployee);
+        //when
+        mockMvc.perform(get("/employee?page=0&pageSize=2")).andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").isNumber())
+                .andExpect(jsonPath("$[0].name").value("Leo"))
+                .andExpect(jsonPath("$[0].age").value(16))
+                .andExpect(jsonPath("$[0].gender").value("Male"))
+                .andExpect(jsonPath("$[0].salary").value(5000))
+                .andExpect(jsonPath("$[1].id").isNumber())
+                .andExpect(jsonPath("$[1].name").value("Charlie"))
+                .andExpect(jsonPath("$[1].age").value(16))
+                .andExpect(jsonPath("$[1].gender").value("Male"))
+                .andExpect(jsonPath("$[1].salary").value(5000));
+        //then
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        List<Employee> employees = employeeService.getByPage(0,2);
+        Assertions.assertEquals(2,employees.size());
+        Assertions.assertEquals(1,employees.get(0).getId());
+        Assertions.assertEquals("Leo",employees.get(0).getName());
+        Assertions.assertEquals(16,employees.get(0).getAge());
+        Assertions.assertEquals("Male",employees.get(0).getGender());
+        Assertions.assertEquals(5000,employees.get(0).getSalary());
     }
 }
