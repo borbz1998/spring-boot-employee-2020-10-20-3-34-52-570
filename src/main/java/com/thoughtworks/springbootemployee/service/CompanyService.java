@@ -3,7 +3,7 @@ package com.thoughtworks.springbootemployee.service;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
-import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepositoryLegacy;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -11,47 +11,48 @@ import java.util.List;
 
 @Service
 public class CompanyService {
-    private CompanyRepository companyRepository;
-    private EmployeeRepository employeeRepository;
+    private CompanyRepository companyRepositoryLegacy;
+    private EmployeeRepositoryLegacy employeeRepositoryLegacy;
 
-    public CompanyService(CompanyRepository companyRepository, EmployeeRepository employeeRepository) {
-        this.companyRepository = companyRepository;
-        this.employeeRepository = employeeRepository;
+    public CompanyService(CompanyRepository companyRepositoryLegacy, EmployeeRepositoryLegacy employeeRepositoryLegacy) {
+        this.companyRepositoryLegacy = companyRepositoryLegacy;
+        this.employeeRepositoryLegacy = employeeRepositoryLegacy;
     }
 
     public List<Company> getAllCompany() {
-        return companyRepository.findAll();
+        return companyRepositoryLegacy.findAll();
     }
 
     public Company createCompany(Company newCompany) {
-        return companyRepository.save(newCompany);
+        return companyRepositoryLegacy.save(newCompany);
     }
 
     public Company getCompany(Integer companyId) {
-        return companyRepository.findById(companyId).orElse(null);
+        return companyRepositoryLegacy.findById(companyId).orElse(null);
     }
 
     public void deleteCompanyEmployee(Integer companyId) {
-        companyRepository.findById(companyId)
+        companyRepositoryLegacy.findById(companyId)
                 .ifPresent(company -> company.getEmployeeList()
-                        .forEach(employee -> employeeRepository.remove(employee)));
+                        .forEach(employee -> employeeRepositoryLegacy.remove(employee)));
     }
 
     public List<Employee> getCompanyEmployee(Integer companyID) {
-        return companyRepository.findById(companyID)
+        return companyRepositoryLegacy.findById(companyID)
                 .map(Company::getEmployeeList).orElse(Collections.emptyList());
     }
 
     public Company updateCompany(Integer companyID, Company updateCompany) {
-        companyRepository.findById(companyID).ifPresent(company -> {
-            companyRepository.remove(company);
-            companyRepository.save(updateCompany);
+        companyRepositoryLegacy.findById(companyID).ifPresent(company -> {
+            companyRepositoryLegacy.delete(company);
+            companyRepositoryLegacy.save(updateCompany);
         });
         return updateCompany;
     }
 
     public List<Company> getByPage(Integer page, Integer pageSize) {
-        return companyRepository.getByPage(page, pageSize);
+        return null;
+//        return companyRepositoryLegacy.getByPage(page, pageSize);
     }
 
 }

@@ -2,6 +2,7 @@ package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepositoryLegacy;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
+    private EmployeeRepository employeeRepository;
     private EmployeeService employeeService =
-            new EmployeeService(new EmployeeRepository());
+            new EmployeeService(employeeRepository);
 
     @GetMapping
     public List<Employee> getAll() {
