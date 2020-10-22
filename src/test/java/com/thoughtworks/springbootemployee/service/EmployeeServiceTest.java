@@ -40,7 +40,7 @@ class EmployeeServiceTest {
     @Test
     void should_create_employee_when_create_employee() {
         //given
-        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
+        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male",1);
         when(employeeRepositoryLegacy.save(employeeRequest)).thenReturn(employeeRequest);
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
 
@@ -57,7 +57,7 @@ class EmployeeServiceTest {
         //given
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
         when(employeeRepositoryLegacy.findById(1)).thenReturn(Optional
-                .of(new Employee(1, "Charlie", 18, 150, "Male")));
+                .of(new Employee(1, "Charlie", 18, 150, "Male",1)));
 
         // when
         Employee actualResult = employeeService.getEmployee(1);
@@ -74,7 +74,7 @@ class EmployeeServiceTest {
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
 
         when(employeeRepositoryLegacy.findById(1)).thenReturn(Optional
-                .of(new Employee(1, "Charlie", 18, 150, "Male")));
+                .of(new Employee(1, "Charlie", 18, 150, "Male",1)));
 
         // when
         employeeService.deleteEmployee(1);
@@ -87,49 +87,29 @@ class EmployeeServiceTest {
     @Test
     void should_return_updated_employee_given_employee_id() {
         // given
-        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
+        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male",1);
         when(employeeRepositoryLegacy.save(employeeRequest)).thenReturn(employeeRequest);
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
 
         // when
         Employee actualResult = employeeService.updateEmployee(1,
-                (new Employee(1, "Janelle", 18, 150, "female")));
+                (new Employee(1, "Janelle", 18, 150, "female",1)));
 
         // then
         Assertions.assertEquals("Janelle", actualResult.getName());
         // AssertSame
     }
 
-//    @Test
-//    void should_return_employee_list_given_employee_gender_is_male() {
-//        // GIVEN
-//        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "male");
-//        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "male");
-//        Employee employeeRequest3 = new Employee(2, "Charlie", 10, 150, "female");
-//
-//        EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
-//        employeeService.createEmployee(employeeRequest);
-//        employeeService.createEmployee(employeeRequest2);
-//        employeeService.createEmployee(employeeRequest3);
-//
-//        //when
-//        List<Employee> employeeList = employeeService.getByGender("Male");
-//
-//        // then
-//        Assertions.assertEquals(2, employeeList.size());
-//    }
-
-//    @Test
-//    void should_return_2_employee_when_getByPage_given_employee_request() {
-//        // GIVEN
-//        List<Employee> employeeList = asList(new Employee(), new Employee());
-//
-//        // WHEN
-//        when(employeeRepositoryLegacy.getByPage(1, 2)).thenReturn(employeeList);
-//        EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
-//        List<Employee> employeeActual = employeeService.getByPage(1, 2);
-//
-//        // THEN
-//        Assertions.assertEquals(2, employeeActual.size());
-//    }
+    @Test
+    void should_return_employee_list_given_employee_gender_is_male() {
+        // GIVEN
+        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "Male",1);
+        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "Male",1);
+        when(employeeRepositoryLegacy.findByGender("Male")).thenReturn(asList(employeeRequest, employeeRequest2));
+        EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
+        //when
+        List<Employee> employeeList = employeeService.getByGender("Male");
+        // then
+        assertEquals(2, employeeList.size());
+    }
 }
