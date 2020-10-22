@@ -6,12 +6,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class EmployeeServiceTest {
@@ -19,7 +28,7 @@ class EmployeeServiceTest {
 
     @BeforeEach
     void setup() {
-        employeeRepository = Mockito.mock(EmployeeRepository.class);
+        employeeRepository = mock(EmployeeRepository.class);
     }
 
     @Test
@@ -117,17 +126,26 @@ class EmployeeServiceTest {
         assertEquals(2, employeeList.size());
     }
 
-//    @Test
-//    void should_return_2_employee_when_getByPage_given_employee_request() {
-//        // GIVEN
-//        List<Employee> employeeList = asList(new Employee(), new Employee(), new Employee());
-//
-//        // WHEN
-//        when(employeeRepository.findAll()).thenReturn(employeeList);
-//        EmployeeService employeeService = new EmployeeService(employeeRepository);
-//        List<Employee> employeeActual = employeeService.getByPage(1, 2);
-//
-//        // THEN
-//        Assertions.assertEquals(2, employeeActual.size());
-//    }
+    @Test
+    void should_return_2_employee_when_getByPage_given_employee_request() {
+        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "Male");
+        Employee employeeRequest2 = new Employee(2, "Charlie", 18, 69, "Male");
+        Employee employeeRequest3 = new Employee(3, "Leo", 35, 55, "Male");
+        Employee employeeRequest4 = new Employee(4, "Leo", 35, 55, "Male");
+
+        //given
+        Page<Employee> mockPage = mock(Page.class);
+        when(employeeRepository.save(employeeRequest)).thenReturn(employeeRequest);
+        when(employeeRepository.save(employeeRequest2)).thenReturn(employeeRequest2);
+        when(employeeRepository.save(employeeRequest3)).thenReturn(employeeRequest3);
+        when(employeeRepository.save(employeeRequest4)).thenReturn(employeeRequest4);
+        when(employeeRepository.findAll(PageRequest.of(0, 2))).thenReturn(mockPage);
+        when(mockPage.toList()).thenReturn(asList(employeeRequest, employeeRequest2));
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        //when
+        List<Employee> fetchedEmployees = employeeService.getByPage(0,2);
+
+        //then
+        assertEquals(2, fetchedEmployees.size());
+    }
 }
