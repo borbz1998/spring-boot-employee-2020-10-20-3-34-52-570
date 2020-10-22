@@ -34,7 +34,7 @@ public class EmployeeIntegrationTest {
     @Test
     void should_get_all_employee_when_get_all() throws Exception {
         //given
-        Employee employee = new Employee(1, "Charlie", 18, 150, "Male", 1);
+        Employee employee = new Employee(1,"Charlie",18,150,"Male");
         employeeRepository.save(employee);
 
         //when and then

@@ -30,17 +30,12 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Integer employeeId) {
-        Optional<Employee> employee = employeeRepository.findById(employeeId);
-        employee.ifPresent(employeeRepository::delete);
+        employeeRepository.deleteById(employeeId);
     }
 
     public Employee updateEmployee(Integer employeeId, Employee newEmployee) {
-        employeeRepository.findById(employeeId)
-                .ifPresent(employee -> {
-                    employeeRepository.delete(employee);
-                    employeeRepository.save(newEmployee);
-                });
-        return newEmployee;
+        newEmployee.setId(employeeId);
+        return employeeRepository.save(newEmployee);
     }
 
     public List<Employee> getByGender(String gender) {

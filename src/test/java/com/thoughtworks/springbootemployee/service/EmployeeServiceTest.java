@@ -40,7 +40,7 @@ class EmployeeServiceTest {
     @Test
     void should_create_employee_when_create_employee() {
         //given
-        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male",1);
+        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
         when(employeeRepositoryLegacy.save(employeeRequest)).thenReturn(employeeRequest);
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
 
@@ -57,7 +57,7 @@ class EmployeeServiceTest {
         //given
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
         when(employeeRepositoryLegacy.findById(1)).thenReturn(Optional
-                .of(new Employee(1, "Charlie", 18, 150, "Male",1)));
+                .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
         // when
         Employee actualResult = employeeService.getEmployee(1);
@@ -74,7 +74,7 @@ class EmployeeServiceTest {
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
 
         when(employeeRepositoryLegacy.findById(1)).thenReturn(Optional
-                .of(new Employee(1, "Charlie", 18, 150, "Male",1)));
+                .of(new Employee(1, "Charlie", 18, 150, "Male")));
 
         // when
         employeeService.deleteEmployee(1);
@@ -87,13 +87,13 @@ class EmployeeServiceTest {
     @Test
     void should_return_updated_employee_given_employee_id() {
         // given
-        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male",1);
+        Employee employeeRequest = new Employee(1, "Charlie", 22, 150, "Male");
         when(employeeRepositoryLegacy.save(employeeRequest)).thenReturn(employeeRequest);
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
 
         // when
         Employee actualResult = employeeService.updateEmployee(1,
-                (new Employee(1, "Janelle", 18, 150, "female",1)));
+                (new Employee(1, "Janelle", 18, 150, "female")));
 
         // then
         Assertions.assertEquals("Janelle", actualResult.getName());
@@ -103,8 +103,8 @@ class EmployeeServiceTest {
     @Test
     void should_return_employee_list_given_employee_gender_is_male() {
         // GIVEN
-        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "Male",1);
-        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "Male",1);
+        Employee employeeRequest = new Employee(1, "junjun", 10, 150, "Male");
+        Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "Male");
         when(employeeRepositoryLegacy.findByGender("Male")).thenReturn(asList(employeeRequest, employeeRequest2));
         EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
         //when
@@ -112,4 +112,18 @@ class EmployeeServiceTest {
         // then
         assertEquals(2, employeeList.size());
     }
+
+//    @Test
+//    void should_return_2_employee_when_getByPage_given_employee_request() {
+//        // GIVEN
+//        List<Employee> employeeList = asList(new Employee(), new Employee());
+//        // WHEN
+//        when(employeeRepositoryLegacy.(1, 2)).thenReturn(employeeList);
+//        EmployeeService employeeService = new EmployeeService(employeeRepositoryLegacy);
+//        List<Employee> employeeActual = employeeService.getByPage(1, 2);
+//
+//        // THEN
+//        Assertions.assertEquals(2, employeeActual.size());
+//    }
+
 }
