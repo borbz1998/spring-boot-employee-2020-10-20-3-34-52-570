@@ -33,7 +33,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_create_company_when_create_company() {
+    void should_return_created_company_when_create_company() {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         Company companyRequest = new Company(1, "OOCL", employeeList.size(), employeeList);
@@ -50,7 +50,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_get_company_given_company_id() {
+    void should_get_specific_company_given_company_id() {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
@@ -106,7 +106,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_return_employee_on_list_given_company_id() {
+    void should_return_company_employee_on_list_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
@@ -124,7 +124,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_return_updated_company_given_employee_id() {
+    void should_return_updated_company_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);

@@ -96,7 +96,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_gender_when_search_given_employee_request() {
+    void should_return_employee_list_given_employee_gender_is_male() {
         // GIVEN
         Employee employeeRequest = new Employee(1, "junjun", 10, 150, "male");
         Employee employeeRequest2 = new Employee(2, "Charlie", 10, 150, "male");
@@ -114,7 +114,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_2_company_when_getByPage_given_employee_request() {
+    void should_return_2_employee_when_getByPage_given_employee_request() {
         // GIVEN
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
