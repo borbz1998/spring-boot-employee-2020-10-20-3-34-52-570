@@ -5,7 +5,6 @@ import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,9 +48,8 @@ public class EmployeeService {
     }
 
     public List<Employee> getByPage(Integer page, Integer pageSize) {
-        return null;
-//        Pageable pageable = PageRequest.of(page, pageSize);
-//        return employeeRepository.findAll(pageable).toList();
+        PageRequest pageable = PageRequest.of(page, pageSize);
+        return employeeRepository.findAll(pageable).toList();
 //        return employeeRepository.getByPage(page, pageSize);
     }
 }

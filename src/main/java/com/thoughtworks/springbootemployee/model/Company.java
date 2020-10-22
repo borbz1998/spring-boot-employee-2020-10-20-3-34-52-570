@@ -6,33 +6,33 @@ import java.util.List;
 @Entity
 public class Company {
     @Id
-    private Integer companyId;
+    private Integer company_Id;
     private String companyName;
     private Integer employeesNumber;
     @OneToMany(
             fetch = FetchType.LAZY,
             orphanRemoval = false
     )
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_Id")
     private List<Employee> employeeList;
 
     public Company() {
     }
 
-    public Company(Integer companyId, String companyName, Integer employeesNumber, List<Employee> employeeList) {
-        this.companyId = companyId;
+    public Company(Integer company_Id, String companyName, Integer employeesNumber, List<Employee> employeeList) {
+        this.company_Id = company_Id;
         this.companyName = companyName;
         // TODO: 10/22/2020 remove employees number 
         this.employeesNumber = employeesNumber;
         this.employeeList = employeeList;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
+    public Integer getCompany_Id() {
+        return company_Id;
     }
 
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setCompany_Id(Integer company_Id) {
+        this.company_Id = company_Id;
     }
 
     public String getCompanyName() {

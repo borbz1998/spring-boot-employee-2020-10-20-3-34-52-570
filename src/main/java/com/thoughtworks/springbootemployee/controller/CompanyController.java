@@ -3,7 +3,6 @@ package com.thoughtworks.springbootemployee.controller;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
-import com.thoughtworks.springbootemployee.repository.CompanyRepositoryLegacy;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepositoryLegacy;
 import com.thoughtworks.springbootemployee.service.CompanyService;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,11 @@ public class CompanyController {
     private CompanyRepository companyRepository;
     private EmployeeRepositoryLegacy employeeRepository;
 
+//    private CompanyService companyService =
+//            new CompanyService(companyRepository, employeeRepository);
+
     private CompanyService companyService =
-            new CompanyService(companyRepository, employeeRepository);
+            new CompanyService(companyRepository);
 
     @GetMapping
     public List<Company> getAllCompanies() {
@@ -61,5 +63,4 @@ public class CompanyController {
     public List<Employee> getEmployees(@PathVariable Integer companyID) {
         return companyService.getCompanyEmployee(companyID);
     }
-
 }

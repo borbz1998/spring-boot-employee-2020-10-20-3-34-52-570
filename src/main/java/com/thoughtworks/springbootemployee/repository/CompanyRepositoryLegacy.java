@@ -24,7 +24,7 @@ public class CompanyRepositoryLegacy {
     public Optional<Company> findById(Integer companyId) {
         return companyList.stream()
                 .filter(company -> company
-                        .getCompanyId().equals(companyId))
+                        .getCompany_Id().equals(companyId))
                 .findFirst();
     }
 

@@ -2,9 +2,11 @@ package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.repository.CompanyRepositoryLegacy;
+import com.thoughtworks.springbootemployee.repository.CompanyRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepositoryLegacy;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -16,15 +18,22 @@ import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;
 
 class CompanyServiceTest {
+    private CompanyRepository companyRepository;
+
+    @BeforeEach
+    void setup(){
+        companyRepository = Mockito.mock(CompanyRepository.class);
+    }
+
 
     @Test
     void should_return_company_list_when_get_all_given_companies() {
         //given
-        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
+
         EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
         List<Company> expectedResult = asList(new Company(), new Company());
-        when(companyRepositoryLegacy.findAll()).thenReturn(expectedResult);
-        CompanyService companyService = new CompanyService(companyRepositoryLegacy, employeeRepositoryLegacy);
+        when(companyRepository.findAll()).thenReturn(expectedResult);
+        CompanyService companyService = new CompanyService(companyRepository);
 
         // when
         List<Company> actual = companyService.getAllCompany();
@@ -38,15 +47,15 @@ class CompanyServiceTest {
         List<Employee> employeeList = asList(new Employee(), new Employee());
         Company companyRequest = new Company(1, "OOCL", employeeList.size(), employeeList);
         EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
-        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
-        when(companyRepositoryLegacy.save(companyRequest)).thenReturn(companyRequest);
-        CompanyService companyService = new CompanyService(companyRepositoryLegacy, employeeRepositoryLegacy);
+
+        when(companyRepository.save(companyRequest)).thenReturn(companyRequest);
+        CompanyService companyService = new CompanyService(companyRepository);
 
         // when
         Company actualResult = companyService.createCompany(companyRequest);
 
         //then
-        Assertions.assertEquals(1, actualResult.getCompanyId());
+        Assertions.assertEquals(1, actualResult.getCompany_Id());
     }
 
     @Test
@@ -54,17 +63,17 @@ class CompanyServiceTest {
         //given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
-        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
-        CompanyService companyService = new CompanyService(companyRepositoryLegacy, employeeRepositoryLegacy);
 
-        when(companyRepositoryLegacy.findById(1)).thenReturn(Optional
+        CompanyService companyService = new CompanyService(companyRepository);
+
+        when(companyRepository.findById(1)).thenReturn(Optional
                 .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
 
         // when
         Company actualResult = companyService.getCompany(1);
 
         //then
-        Assertions.assertEquals(1, actualResult.getCompanyId());
+        Assertions.assertEquals(1, actualResult.getCompany_Id());
         Assertions.assertEquals("OOCL", actualResult.getCompanyName());
         // Assert Same actual
     }
@@ -73,48 +82,45 @@ class CompanyServiceTest {
     void should_delete_employee_on_list_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
-        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
-        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
-        CompanyService companyService = new CompanyService(companyRepositoryLegacy, employeeRepositoryLegacy);
+        EmployeeRepository employeeRepositoryLegacy = Mockito.mock(EmployeeRepository.class);
 
-        when(companyRepositoryLegacy.findById(1)).thenReturn(Optional
-                .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
+        CompanyService companyService = new CompanyService(companyRepository);
 
         // when
         companyService.deleteCompanyEmployee(1);
 
         //then
-        Mockito.verify(employeeRepositoryLegacy, Mockito.times(2)).remove(Mockito.any(Employee.class));
+        Mockito.verify(companyRepository, Mockito.times(1)).deleteById(Mockito.any(Integer.class));
     }
 
-    @Test
-    void should_return_2_company_when_getByPage_given_company_request() {
-        //GIVEN
-        List<Employee> employeeList = asList(new Employee(), new Employee());
-        List<Employee> employeeList2 = asList(new Employee(), new Employee());
-        List<Company> companies =
-                asList(new Company(1, "OOCL", employeeList.size(), employeeList),
-                        new Company(1, "OOL", employeeList2.size(), employeeList2));
-
-        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
-        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
-        when(companyRepositoryLegacy.getByPage(1, 2)).thenReturn(companies);
-        CompanyService companyService = new CompanyService(companyRepositoryLegacy, employeeRepositoryLegacy);
-        //WHEN
-        List<Company> companyActual = companyService.getByPage(1, 2);
-        //THEN
-        Assertions.assertEquals(2, companyActual.size());
-    }
+//    @Test
+//    void should_return_2_company_when_getByPage_given_company_request() {
+//        //GIVEN
+//        List<Employee> employeeList = asList(new Employee(), new Employee());
+//        List<Employee> employeeList2 = asList(new Employee(), new Employee());
+//        List<Company> companies =
+//                asList(new Company(1, "OOCL", employeeList.size(), employeeList),
+//                        new Company(1, "OOL", employeeList2.size(), employeeList2));
+//
+//        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
+//
+//        when(companyRepositoryLegacy.getByPage(1, 2)).thenReturn(companies);
+//        CompanyService companyService = new CompanyService(companyRepositoryLegacy);
+//        //WHEN
+//        List<Company> companyActual = companyService.getByPage(1, 2);
+//        //THEN
+//        Assertions.assertEquals(2, companyActual.size());
+//    }
 
     @Test
     void should_return_company_employees_on_list_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
         EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
-        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
-        CompanyService companyService = new CompanyService(companyRepositoryLegacy, employeeRepositoryLegacy);
 
-        when(companyRepositoryLegacy.findById(1)).thenReturn(Optional
+        CompanyService companyService = new CompanyService(companyRepository);
+
+        when(companyRepository.findById(1)).thenReturn(Optional
                 .of(new Company(1, "OOCL", employeeList.size(), employeeList)));
 
         // when
@@ -124,19 +130,19 @@ class CompanyServiceTest {
         Assertions.assertEquals(2, finalEmployee.size());
     }
 
-    // TODO: 10/22/2020 Should create test that will check if the List of employee is empty 
+    // TODO: 10/22/2020 Should create test that will check if the List of employee is empty
 
     @Test
     void should_return_updated_company_given_company_id() {
         // given
         List<Employee> employeeList = asList(new Employee(), new Employee());
-        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
-        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
+//        EmployeeRepositoryLegacy employeeRepositoryLegacy = Mockito.mock(EmployeeRepositoryLegacy.class);
+//        CompanyRepositoryLegacy companyRepositoryLegacy = Mockito.mock(CompanyRepositoryLegacy.class);
 
         Company company = new Company(123, "OOCL", employeeList.size(), employeeList);
 
-        when(companyRepositoryLegacy.save(company)).thenReturn(company);
-        CompanyService companyService = new CompanyService(companyRepositoryLegacy, employeeRepositoryLegacy);
+        when(companyRepository.save(company)).thenReturn(company);
+        CompanyService companyService = new CompanyService(companyRepository);
         // when
         companyService.createCompany(company);
         List<Employee> newEmployeeList = asList(new Employee(), new Employee(), new Employee());
